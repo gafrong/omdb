@@ -1,0 +1,60 @@
+<input type="text" id="search-box"><button id="search-button">Search</button>
+
+<div id="output"></div>
+
+<h2></h2>
+
+
+<script type="text/template" id="movie-template">
+    <article>
+      <h2>Title: {{ title }} </h2>
+      <h4>Year: {{ year }}</h4>
+      <p>Plot: {{ plot }}</p>
+    </article>
+</script>
+
+
+<script>
+  console.log('hello from index html erb page');
+
+  _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
+
+
+  var $button = $('#search-button')
+
+
+  $button.on('click', function(){
+    
+    var $inputVal = $('#search-box').val();
+
+    var showMovie = function(data) {
+
+      var $html = $('<p> Title: ' + data.Title + ' Year: ' + data.Year + '</p>'); 
+
+      console.log(data);
+      // var templateStr = "<p> Title: {{ title }} Year: {{ year }} </p>";
+      // var templateFunc = _.template(templateStr);
+      // var htmlOutput = templateFunc( { title: data.Title, year: data.Year } );
+
+      
+      var templateFunc = _.template($('#movie-template').html());
+      var htmlOutput = templateFunc( { 
+        title: data.Title, 
+        year: data.Year,
+        plot: 'blah blah blah' 
+      } );
+ 
+      $('#output').append( htmlOutput);
+    }
+
+    var options = {
+      url: 'http://www.omdbapi.com/?t=' + $inputVal,
+      type: 'GET',
+      dataType: 'json'
+    }
+    $.ajax(options).done(showMovie);
+
+  });
+
+</script>
+
